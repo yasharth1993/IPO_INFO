@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPO Information</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+    }
+    .ticker {
+      background-color: #222;
+      color: white;
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+    }
+    .ticker span {
+      display: inline-block;
+      padding-right: 50px;
+      animation: ticker 10s linear infinite;
+    }
+    @keyframes ticker {
+      from {
+        transform: translateX(100%);
+      }
+      to {
+        transform: translateX(-100%);
+      }
+    }
+    .icon-up {
+      color: green;
+    }
+    .icon-down {
+      color: red;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .output {
+      white-space: pre-wrap;
+      font-family: monospace;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>IPO Information</h1>
+</header>
+<div class="ticker">
+  <span>Stock A: 102.5 <span class="icon-up">&#9650;</span> | Stock B: 98.3 <span class="icon-down">&#9660;</span> | Stock C: 120.0 <span class="icon-up">&#9650;</span> | Stock D: 85.7 <span class="icon-down">&#9660;</span></span>
+</div>
+<div class="container">
+  <div class="output" id="output">Fetching IPO information...</div>
+</div>
+<script>
+  window.addEventListener('load', async () => {
+    const outputDiv = document.getElementById('output');
+    const apiKey = '<test api key>'; // Replace with your OpenAI API key
+
+    if (!apiKey) {
+      outputDiv.textContent = 'Error: OpenAI API key is missing!';
+      return;
+    }
+
+    const prompt = `Provide the latest IPO information in JSON format. Include the following details:
+    - active_IPOs: an array of active IPOs
+    - Each IPO should have: name, issue_price, gmp, subscription_status, and subscription_date
+    - subscription_status should include: total, qib, nii, and retail`;
+
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            //model: 'gpt-3.5-turbo',
+            model: 'gpt-4o-mini',
+            messages: [
+            { role: 'system', content: 'You are an assistant providing IPO information.' },
+            { role: 'user', content: prompt }
+            ],
+            max_tokens: 300
+        })
+});
+const limit = response.headers.get('X-RateLimit-Limit');
+const remaining = response.headers.get('X-RateLimit-Remaining');
+const reset = response.headers.get('X-RateLimit-Reset');
+
+console.log(`Rate limit: ${limit}, Remaining: ${remaining}, Reset at: ${reset}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+
+      const data = await response.json();
+      const jsonData = JSON.parse(data.choices[0].text);
+
+      displayIPOData(jsonData);
+    } catch (error) {
+      outputDiv.textContent = `Error: ${error.message}`;
+    }
+  });
+
+  function displayIPOData(data) {
+    const outputDiv = document.getElementById('output');
+    if (!data.active_IPOs || data.active_IPOs.length === 0) {
+      outputDiv.textContent = 'No active IPOs available.';
+      return;
+    }
+
+    const content = data.active_IPOs.map(ipo => {
+      return `
+        <div>
+          <h3>${ipo.name}</h3>
+          <p>Issue Price: ${ipo.issue_price}</p>
+          <p>GMP: ${ipo.gmp}</p>
+          <p>Subscription Status:</p>
+          <ul>
+            <li>Total: ${ipo.subscription_status.total}</li>
+            <li>QIB: ${ipo.subscription_status.qib}</li>
+            <li>NII: ${ipo.subscription_status.nii}</li>
+            <li>Retail: ${ipo.subscription_status.retail}</li>
+          </ul>
+          <p>Subscription Date: ${ipo.subscription_date}</p>
+        </div>
+      `;
+    }).join('');
+
+    outputDiv.innerHTML = content;
+  }
+</script>
+</body>
+</html>
