@@ -52,6 +52,7 @@ const ipoData = {
   window.addEventListener('load', async () => {
     loadIPOData();
     loadBlogs();
+    showSection('ipo-details');
   });
   
   async function loadIPOData() {
@@ -103,9 +104,70 @@ const ipoData = {
   
     blogsContainer.innerHTML = blogElements;
   }
+
+  function showSection(sectionId) {
+    // Get all sections
+    const sections = document.querySelectorAll('.section');
+    
+    // Hide all sections
+    sections.forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Show the selected section
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+        activeSection.classList.add('active');
+    }
+}
   
   function showMoreContent(index) {
     const content = document.getElementById(`blog-${index}`);
     content.style.display = content.style.display === 'none' ? 'block' : 'none';
   }
+
+  // JavaScript for modal and subscribe functionality
+
+// Open Modal
+function openModal() {
+  document.getElementById('subscribe-modal').style.display = 'block';
+}
+
+// Close Modal
+function closeModal() {
+  document.getElementById('subscribe-modal').style.display = 'none';
+}
+
+// Handle Subscription
+function subscribe() {
+  const userInput = document.getElementById('user-input').value;
+
+  if (userInput === '') {
+    alert('Please enter a valid email or phone number.');
+    return;
+  }
+
+  // Save the input to a file (simulated)
+  fetch('/subscribe', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ userInput: userInput })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('You have successfully subscribed!');
+      closeModal();
+    } else {
+      alert('There was an issue with your subscription.');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('There was an error. Please try again.');
+  });
+}
+
   
