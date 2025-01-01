@@ -1,7 +1,7 @@
 const ipoData = {
     active_IPOs: [
       {
-        name: "Anya Ploytech and Fertilizers",
+        name: "Anya Ploytech and Fertilizer",
         issue_price: 13,
         gmp: 20,
         subscription_status: { total: "5.22", qib: "3.12", nii: "1.5", retail: "10.23" },
@@ -52,6 +52,7 @@ const ipoData = {
   window.addEventListener('load', async () => {
     loadIPOData();
     loadBlogs();
+    fetchMarketNews();
     showSection('ipo-details');
   });
   
@@ -140,34 +141,88 @@ function closeModal() {
 
 // Handle Subscription
 function subscribe() {
-  const userInput = document.getElementById('user-input').value;
+ // Get Form by its id
+const form = document.getElementById("Sheet1");
 
-  if (userInput === '') {
-    alert('Please enter a valid email or phone number.');
-    return;
+// App Script url
+const googleAppScriptUrl = "https://script.google.com/macros/s/AKfycbwMjPlIUzneQpEupD_5zykUz7DXOruscFMRd_SdAJib1hqqWBBN7jGU_pEScbA6rSTg/exec";
+// Fuction to send data to google form when submit button is clicked
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  try {
+    fetch(googleAppScriptUrl, {
+      method: "POST",
+      mode: "no-cors",
+      body: new FormData(form),
+    }).then(() => {
+      console.log("success");
+      alert("Successfully Submitted");
+    });
+  } catch (error) {
+    console.log(error);
   }
+});
+}
 
-  // Save the input to a file (simulated)
-  fetch('/subscribe', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ userInput: userInput })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      alert('You have successfully subscribed!');
-      closeModal();
-    } else {
-      alert('There was an issue with your subscription.');
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('There was an error. Please try again.');
+
+
+function fetchMarketNews() {
+
+  const today = new Date();
+  
+  // Get the date two days ago
+  const twoDaysAgo = new Date();
+  twoDaysAgo.setDate(today.getDate() - 2);
+  
+  // Format dates as YYYY-MM-DD
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const toDate = formatDate(today);
+  const fromDate = formatDate(twoDaysAgo);
+
+  // Construct the API URL with dynamic dates
+  const apiUrl = `https://finnhub.io/api/v1/company-news?symbol=AAPL&from=${fromDate}&to=${toDate}&token=ctqelj1r01qmn6h4465gctqelj1r01qmn6h44660`;
+  
+  fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+          displayMarketNews(data);
+      })
+      .catch(error => {
+          console.error('Error fetching market news:', error);
+      });
+}
+
+function displayMarketNews(news) {
+  const newsContainer = document.getElementById('news-container');
+  newsContainer.innerHTML = '';
+
+  news.forEach(item => {
+      const newsItem = document.createElement('div');
+      newsItem.classList.add('news-item');
+
+      const newsTitle = document.createElement('h3');
+      newsTitle.innerText = item.headline;
+      newsItem.appendChild(newsTitle);
+
+      const newsDescription = document.createElement('p');
+      newsDescription.innerText = item.summary;
+      newsItem.appendChild(newsDescription);
+
+      const newsLink = document.createElement('a');
+      newsLink.href = item.url;
+      newsLink.target = '_blank';
+      newsLink.innerText = 'Read more';
+      newsItem.appendChild(newsLink);
+
+      newsContainer.appendChild(newsItem);
   });
 }
+
 
   

@@ -37,7 +37,8 @@
       <li><a href="#blogs" onclick="showSection('blogs')">Blogs</a></li>
       <li><a href="#rights-issue" onclick="showSection('rights-issue')">Rights Issue</a></li>
       <li><a href="#about-us" onclick="showSection('about-us')">About Us</a></li>
-      <li><a href="#" id="subscribe-btn" onclick="openModal()">Subscribe</a></li>
+      <li><a href="#market-news" onclick="showSection('market-news')">Market News</a></li>
+      <li><a href="#" id="subscribe-btn" onclick="openModal()">Subscribe</a></li>  
     </ul>
   </nav>
 
@@ -50,9 +51,6 @@
           <th rowspan="2">Issue Price</th>
           <th rowspan="2">GMP</th>
           <th colspan="4">Subscription</th>
-          <!-- <th>QIB Subscription</th>
-          <th>NII Subscription</th>
-          <th>Retail Subscription</th> -->
           <th rowspan="2">Valid Till</th>
         </tr>
         <tr>
@@ -83,14 +81,21 @@
     <p>Information about the organization will be shared here.</p>
   </div>
 
+  <div id="market-news" class="section container">
+    <h2>Latest Market News</h2>
+    <div id="news-container"></div>
+</div>
+
     <!-- Modal for Subscription -->
     <div id="subscribe-modal" class="modal">
       <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
         <h2>Subscribe to IPO Guide</h2>
         <p>Please enter your email or phone number to subscribe:</p>
-        <input type="text" id="user-input" placeholder="abc@def.com">
-        <button id="subscribe-button" onclick="subscribe()">Subscribe</button>
+        <form action="post" id="Sheet1">
+          <input type="text" name="user-input" id="user-input" placeholder="abc@def.com">
+          <button id="subscribe-button" onclick="subscribe()">Subscribe</button>
+        </form>
       </div>
     </div>
 
