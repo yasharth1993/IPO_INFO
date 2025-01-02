@@ -55,6 +55,11 @@ const ipoData = {
     fetchMarketNews();
     showSection('ipo-details');
   });
+
+  // document.addEventListener("DOMContentLoaded", () => {
+  // const form = document.getElementById("Sheet1");
+  // form.addEventListener("submit", handleFormSubmit);
+  // });
   
   async function loadIPOData() {
     const tableBody = document.querySelector('#ipo-table tbody');
@@ -132,38 +137,16 @@ const ipoData = {
 // Open Modal
 function openModal() {
   document.getElementById('subscribe-modal').style.display = 'block';
+
+  document.getElementById("form-section").style.display = "block";
+  document.getElementById("spinner-section").style.display = "none";
+  document.getElementById("thankyou-section").style.display = "none";
 }
 
 // Close Modal
 function closeModal() {
   document.getElementById('subscribe-modal').style.display = 'none';
 }
-
-// Handle Subscription
-function subscribe() {
- // Get Form by its id
-const form = document.getElementById("Sheet1");
-
-// App Script url
-const googleAppScriptUrl = "https://script.google.com/macros/s/AKfycbwMjPlIUzneQpEupD_5zykUz7DXOruscFMRd_SdAJib1hqqWBBN7jGU_pEScbA6rSTg/exec";
-// Fuction to send data to google form when submit button is clicked
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  try {
-    fetch(googleAppScriptUrl, {
-      method: "POST",
-      mode: "no-cors",
-      body: new FormData(form),
-    }).then(() => {
-      console.log("success");
-      alert("Successfully Submitted");
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
-}
-
 
 
 function fetchMarketNews() {
@@ -222,6 +205,44 @@ function displayMarketNews(news) {
 
       newsContainer.appendChild(newsItem);
   });
+}
+
+
+
+
+// App Script url
+const form = document.getElementById("Sheet1");
+const userInput = document.getElementById("user-input");
+const googleAppScriptUrl = "https://script.google.com/macros/s/AKfycbwMjPlIUzneQpEupD_5zykUz7DXOruscFMRd_SdAJib1hqqWBBN7jGU_pEScbA6rSTg/exec";
+// Fuction to send data to google form when submit button is clicked
+  form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = userInput.value.trim();
+  if (!validateEmailOrPhone(email)) {
+    alert("Please enter a valid email address or phone number.");
+    return;
+  }
+  document.getElementById("form-section").style.display = "none";
+  document.getElementById("spinner-section").style.display = "block";
+  try {
+    fetch(googleAppScriptUrl, {
+      method: "POST",
+      mode: "no-cors",
+      body: new FormData(form),
+    }).then(() => {
+      document.getElementById("spinner-section").style.display = "none";
+      document.getElementById("thankyou-section").style.display = "block";
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    alert("An error occurred. Please try again later.");
+  }
+});
+
+function validateEmailOrPhone(input) {
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const phonePattern = /^[0-9]{10}$/; // Assumes 10-digit phone number without spaces or symbols
+  return emailPattern.test(input) || phonePattern.test(input);
 }
 
 

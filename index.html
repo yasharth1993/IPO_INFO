@@ -14,6 +14,17 @@
     </div>
   </header>
 
+  <nav class="navbar">
+    <ul class="nav-menu">
+      <li><a href="#ipo-details" onclick="showSection('ipo-details')">IPO</a></li>
+      <li><a href="#blogs" onclick="showSection('blogs')">Blogs</a></li>
+      <li><a href="#rights-issue" onclick="showSection('rights-issue')">Rights Issue</a></li>
+      <li><a href="#about-us" onclick="showSection('about-us')">About Us</a></li>
+      <li><a href="#market-news" onclick="showSection('market-news')">Market News</a></li>
+      <li><a href="#" id="subscribe-btn" onclick="openModal()">Subscribe</a></li>  
+    </ul>
+  </nav>
+
   <div class="ticker">
     <div class="ticker-content">
         <span class="ticker-item">Tata Steel: 102.5 <span class="icon-up">&#9650;</span></span>
@@ -30,17 +41,6 @@
         <span class="ticker-item">Adani Port: 112.70 <span class="icon-down">&#9660;</span></span>
     </div>
 </div>
-
-  <nav class="navbar">
-    <ul class="nav-menu">
-      <li><a href="#ipo-details" onclick="showSection('ipo-details')">IPO</a></li>
-      <li><a href="#blogs" onclick="showSection('blogs')">Blogs</a></li>
-      <li><a href="#rights-issue" onclick="showSection('rights-issue')">Rights Issue</a></li>
-      <li><a href="#about-us" onclick="showSection('about-us')">About Us</a></li>
-      <li><a href="#market-news" onclick="showSection('market-news')">Market News</a></li>
-      <li><a href="#" id="subscribe-btn" onclick="openModal()">Subscribe</a></li>  
-    </ul>
-  </nav>
 
   <div id="ipo-details" class="section container">
     <h2>IPO Details</h2>
@@ -90,12 +90,28 @@
     <div id="subscribe-modal" class="modal">
       <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h2>Subscribe to IPO Guide</h2>
+        <div id="form-section">
+          <h2>Subscribe to IPO Guide</h2>
+          <p>Please enter your email or phone number to subscribe:</p>
+          <form id="Sheet1">
+            <input type="text" name="user-input" id="user-input" placeholder="abc@def.com" required>
+            <button id="subscribe-button" type="submit">Subscribe</button>
+          </form>
+        </div>
+        <div id="spinner-section" style="display: none; text-align: center;">
+          <div class="spinner" style="margin: 20px auto; width: 40px; height: 40px; border: 4px solid #ccc; border-top: 4px solid #4CAF50; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+          <p>Processing your subscription...</p>
+        </div>
+        <div id="thankyou-section" style="display: none; text-align: center;">
+          <h2>Thank you for subscribing!</h2>
+          <p>Stay updated for the latest stock market info.</p>
+        </div>
+        <!-- <h2>Subscribe to IPO Guide</h2>
         <p>Please enter your email or phone number to subscribe:</p>
         <form action="post" id="Sheet1">
           <input type="text" name="user-input" id="user-input" placeholder="abc@def.com">
-          <button id="subscribe-button" onclick="subscribe()">Subscribe</button>
-        </form>
+          <button id="subscribe-button" type="submit">Subscribe</button>
+        </form> -->
       </div>
     </div>
 
