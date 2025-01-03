@@ -244,15 +244,22 @@ function displayMarketNews(news) {
 
   // Check if the "Show more news" text is needed
   const existingShowMoreText = document.querySelector('.show-more-text');
+  const existingLine = document.querySelector('.line-break');
 
   // Remove the existing "Show more" text if there is one, to avoid duplicates
   if (existingShowMoreText) {
       existingShowMoreText.remove();
   }
+  if (existingLine) {
+    existingLine.remove();
+  }
 
   // Only add the "Show more news" text if there are more news to load
   if (currentIndex + newsPerPage < news.length) {
       const showMoreText = document.createElement('span');
+      const line = document.createElement('br');
+      line.classList.add('line-break');
+
       showMoreText.innerText = 'Show more news';
       showMoreText.classList.add('show-more-text');
       showMoreText.style.cursor = 'pointer';
@@ -263,6 +270,7 @@ function displayMarketNews(news) {
 
       // Add the "Show more news" text at the bottom of the container
       newsContainer.appendChild(showMoreText);
+      newsContainer.appendChild(line);
   }
 }
 
@@ -309,3 +317,9 @@ function validateEmailOrPhone(input) {
   const phonePattern = /^[0-9]{10}$/; // Assumes 10-digit phone number without spaces or symbols
   return emailPattern.test(input) || phonePattern.test(input);
 }
+
+const burgerIcon = document.getElementById('burger-icon');
+const navMenu = document.querySelector('.nav-menu');
+        burgerIcon.addEventListener('click', () => {
+          navMenu.classList.toggle('show');
+});
