@@ -424,21 +424,6 @@ button.more-btn:hover {
     }
 }
 
-/* Add this to your CSS file */
-/* #market-news {
-    display: none;
-    padding: 20px;
-    background-color: #f4f4f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-#market-news h2 {
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 15px;
-} */
-
 .news-item {
     background-color: #fff;
     border-radius: 8px;
@@ -463,3 +448,103 @@ button.more-btn:hover {
     color: darkseagreen;
     text-decoration: none;
 }
+
+.news-item span {
+    color: darkseagreen;
+    text-decoration: none;
+    margin: 20px auto;
+    width: 40px; 
+    height: 40px; 
+    border: 4px solid #ccc; 
+    border-top: 4px solid #4CAF50; 
+    border-radius: 50%; 
+    animation: spin 1s linear infinite;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #222;
+    color: white;
+    padding: 40px 0;
+    font-size: 16px;
+    text-align: center;
+    position: relative;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.about-us, .social-links, .contact-info {
+    width: 30%;
+    padding: 10px;
+}
+
+.about-us h3, .social-links h3, .contact-info h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #4CAF50;
+}
+
+.about-us p, .contact-info p {
+    line-height: 1.6;
+}
+
+.social-links ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.social-links li {
+    margin: 10px 0;
+}
+
+.social-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #4CAF50;
+}
+
+.social-icon {
+    margin-right: 10px;
+}
+
+.social-icon i {
+    font-size: 20px;
+}
+
+.footer-bottom {
+    background-color: #333;
+    color: #bbb;
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+.footer-bottom p {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-us, .social-links, .contact-info {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .social-links a {
+        font-size: 16px;
+    }
+}
+
