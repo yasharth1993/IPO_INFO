@@ -309,3 +309,9 @@ function validateEmailOrPhone(input) {
   const phonePattern = /^[0-9]{10}$/; // Assumes 10-digit phone number without spaces or symbols
   return emailPattern.test(input) || phonePattern.test(input);
 }
+
+const burgerIcon = document.getElementById('burger-icon');
+const navMenu = document.querySelector('.nav-menu');
+        burgerIcon.addEventListener('click', () => {
+          navMenu.classList.toggle('show');
+});
