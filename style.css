@@ -1,4 +1,9 @@
 /* Global Styles */
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -119,7 +124,7 @@ header h1 {
 
 /* Hide sections by default */
 .section {
-    display: none;
+    display: block;
 }
 
 /* Show the active section */

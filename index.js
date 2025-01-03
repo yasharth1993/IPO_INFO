@@ -53,14 +53,15 @@ const ipoData = {
     loadIPOData();
     loadBlogs();
     fetchMarketNews();
-    showSection('ipo-details');
   });
 
-  // document.addEventListener("DOMContentLoaded", () => {
-  // const form = document.getElementById("Sheet1");
-  // form.addEventListener("submit", handleFormSubmit);
-  // });
-  
+  window.onload = function () {
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto'
+    });
+  };
+
   async function loadIPOData() {
     const tableBody = document.querySelector('#ipo-table tbody');
     
@@ -113,19 +114,31 @@ const ipoData = {
 
   function showSection(sectionId) {
     // Get all sections
-    const sections = document.querySelectorAll('.section');
-    
-    // Hide all sections
-    sections.forEach(section => {
-        section.classList.remove('active');
-    });
-    
-    // Show the selected section
-    const activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-        activeSection.classList.add('active');
+    const targetSection = document.getElementById(sectionId);
+
+    // If the target section exists, scroll to it
+    if (targetSection) {
+      targetSection.scrollIntoView({
+        behavior: 'smooth', // Smooth scrolling
+        block: 'start',     // Align to the start of the section
+      });
     }
 }
+
+
+function showSection(sectionId) {
+  // Get all sections
+  const targetSection = document.getElementById(sectionId);
+
+  // If the target section exists, scroll to it
+  if (targetSection) {
+    targetSection.scrollIntoView({
+      behavior: 'smooth', // Smooth scrolling
+      block: 'start',     // Align to the start of the section
+    });
+  }
+}
+
   
   function showMoreContent(index) {
     const content = document.getElementById(`blog-${index}`);
