@@ -213,48 +213,47 @@ function fetchMarketNews() {
 }
 
 let currentIndex = 0;
-const newsPerPage = 5;
+const newsPerPage = 6;
 
 function displayMarketNews(news) {
   const newsContainer = document.getElementById('news-container');
-
-  // Display the current batch of news items
   const currentNews = news.slice(currentIndex, currentIndex + newsPerPage);
 
   currentNews.forEach(item => {
       const newsItem = document.createElement('div');
       newsItem.classList.add('news-item');
 
-      const newsTitle = document.createElement('h3');
-      newsTitle.innerText = item.headline;
-      newsItem.appendChild(newsTitle);
-
-      const newsDescription = document.createElement('p');
-      newsDescription.innerText = item.summary;
-      newsItem.appendChild(newsDescription);
-
+      // Create a clickable wrapper
       const newsLink = document.createElement('a');
       newsLink.href = item.url;
       newsLink.target = '_blank';
-      newsLink.innerText = 'Read more';
+
+      const newsImage = document.createElement('img');
+      newsImage.src = item.image;
+      newsImage.alt = 'News Image';
+      newsLink.appendChild(newsImage);
+
+      const newsTitle = document.createElement('h3');
+      newsTitle.innerText = item.headline;
+      newsLink.appendChild(newsTitle);
+
       newsItem.appendChild(newsLink);
+
+      const newsDescription = document.createElement('p');
+      const summaryText = item.summary.split('.')[0]; // Get text until the first full stop
+      newsDescription.innerText = summaryText + '.';
+      newsItem.appendChild(newsDescription);
 
       newsContainer.appendChild(newsItem);
   });
 
-  // Check if the "Show more news" text is needed
+  // Existing "Show more news" functionality
   const existingShowMoreText = document.querySelector('.show-more-text');
   const existingLine = document.querySelector('.line-break');
 
-  // Remove the existing "Show more" text if there is one, to avoid duplicates
-  if (existingShowMoreText) {
-      existingShowMoreText.remove();
-  }
-  if (existingLine) {
-    existingLine.remove();
-  }
+  if (existingShowMoreText) existingShowMoreText.remove();
+  if (existingLine) existingLine.remove();
 
-  // Only add the "Show more news" text if there are more news to load
   if (currentIndex + newsPerPage < news.length) {
       const showMoreText = document.createElement('span');
       const line = document.createElement('br');
@@ -262,17 +261,13 @@ function displayMarketNews(news) {
 
       showMoreText.innerText = 'Show more news';
       showMoreText.classList.add('show-more-text');
-      showMoreText.style.cursor = 'pointer';
-      showMoreText.style.color = 'darkseagreen';
-      showMoreText.style.textDecoration = 'underline';
-      showMoreText.style.float = 'right';
       showMoreText.onclick = () => loadMoreNews(news);
 
-      // Add the "Show more news" text at the bottom of the container
       newsContainer.appendChild(showMoreText);
       newsContainer.appendChild(line);
   }
 }
+
 
 // Function to load the next set of news items without removing the previous ones
 function loadMoreNews(news) {
