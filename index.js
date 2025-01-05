@@ -64,6 +64,21 @@ const blogData = [{
       title: "What Does GMP (Grey Market Premium) Indicate in IPOs?",
       summary: "The Grey Market Premium (GMP) is the price at which shares of an unlisted IPO are traded in the unofficial market before the actual listing on the stock exchange.",
       fullContent: "The GMP is a crucial indicator of the potential listing price of an IPO. A higher GMP suggests a strong interest from investors, which might result in a higher opening price on the stock exchange. However, it is important to note that GMP is unofficial and does not always reflect the actual listing price. Investors often look at GMP as a barometer for potential gains but should not base their entire investment decision solely on it."
+  },
+  {
+    title: "What Does GMP (Grey Market Premium) Indicate in IPOs?",
+    summary: "The Grey Market Premium (GMP) is the price at which shares of an unlisted IPO are traded in the unofficial market before the actual listing on the stock exchange.",
+    fullContent: "The GMP is a crucial indicator of the potential listing price of an IPO. A higher GMP suggests a strong interest from investors, which might result in a higher opening price on the stock exchange. However, it is important to note that GMP is unofficial and does not always reflect the actual listing price. Investors often look at GMP as a barometer for potential gains but should not base their entire investment decision solely on it."
+  },
+  {
+    title: "What Does GMP (Grey Market Premium) Indicate in IPOs?",
+    summary: "The Grey Market Premium (GMP) is the price at which shares of an unlisted IPO are traded in the unofficial market before the actual listing on the stock exchange.",
+    fullContent: "The GMP is a crucial indicator of the potential listing price of an IPO. A higher GMP suggests a strong interest from investors, which might result in a higher opening price on the stock exchange. However, it is important to note that GMP is unofficial and does not always reflect the actual listing price. Investors often look at GMP as a barometer for potential gains but should not base their entire investment decision solely on it."
+  },
+  {
+    title: "What Does GMP (Grey Market Premium) Indicate in IPOs?",
+    summary: "The Grey Market Premium (GMP) is the price at which shares of an unlisted IPO are traded in the unofficial market before the actual listing on the stock exchange.",
+    fullContent: "The GMP is a crucial indicator of the potential listing price of an IPO. A higher GMP suggests a strong interest from investors, which might result in a higher opening price on the stock exchange. However, it is important to note that GMP is unofficial and does not always reflect the actual listing price. Investors often look at GMP as a barometer for potential gains but should not base their entire investment decision solely on it."
   }
 ];
 
@@ -125,19 +140,55 @@ async function loadBlogs() {
 
   const blogElements = blogData.map((blog, index) => {
       return `
-      <div class="blog">
-        <h3>${blog.title}</h3>
-        <p>${blog.summary}</p>
-        <button class="more-btn" onclick="showMoreContent(${index})">Read more</button>
-        <div class="full-content" id="blog-${index}" style="display: none;">
-          <p>${blog.fullContent}</p>
-        </div>
+      <div class="blog" id="blog-${index}">
+          <h3>${blog.title}</h3>
+          <p>${blog.summary}</p>
+          <div class="full-content" id="content-${index}" style="max-height: 0;">
+              <p>${blog.fullContent}</p>
+          </div>
+          <button class="more-btn" data-index="${index}">Read More</button>
       </div>
-    `;
+      `;
   }).join('');
 
   blogsContainer.innerHTML = blogElements;
+
+  // Attach event listeners to buttons
+  document.querySelectorAll('.more-btn').forEach(button => {
+      button.addEventListener('click', handleReadMoreClick);
+  });
 }
+
+function handleReadMoreClick(event) {
+  const clickedButton = event.target; // Get the clicked button
+  const index = clickedButton.getAttribute('data-index'); // Get the blog index
+  const fullContent = document.getElementById(`content-${index}`); // Get the full-content div
+  const isOpen = fullContent.style.maxHeight !== '0px'; // Check if it's open
+
+  if (isOpen) {
+      // Collapse the clicked blog
+      fullContent.style.maxHeight = '0';
+      clickedButton.textContent = 'Read More';
+  } else {
+      // Collapse all other blogs
+      document.querySelectorAll('.full-content').forEach(content => {
+          content.style.maxHeight = '0'; // Collapse all full-content divs
+      });
+      document.querySelectorAll('.more-btn').forEach(button => {
+          button.textContent = 'Read More'; // Reset all buttons
+      });
+
+      // Expand the clicked blog
+      const contentHeight = fullContent.scrollHeight; // Get dynamic height
+      fullContent.style.maxHeight = `${contentHeight}px`; // Set max-height
+      clickedButton.textContent = 'Read Less'; // Update button text
+  }
+}
+
+
+
+
+
 
 function showSection(sectionId) {
   // Get all sections
@@ -167,10 +218,10 @@ function showSection(sectionId) {
 }
 
 
-function showMoreContent(index) {
-  const content = document.getElementById(`blog-${index}`);
-  content.style.display = content.style.display === 'none' ? 'block' : 'none';
-}
+// function showMoreContent(index) {
+//   const content = document.getElementById(`blog-${index}`);
+//   content.style.display = content.style.display === 'none' ? 'block' : 'none';
+// }
 
 // JavaScript for modal and subscribe functionality
 
