@@ -68,7 +68,8 @@ const blogData = [{
 ];
 
 window.addEventListener('load', async () => {
-  loadIPOData();
+  fetchSheetData();
+  //loadIPOData();
   loadBlogs();
   fetchMarketNews();
 });
@@ -80,30 +81,38 @@ window.onload = function() {
   });
 };
 
-async function loadIPOData() {
+  const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgSfiYUJz8LD50TmOuycEprrUE_5loqkR3kJ27cxbZFtZg-BiuNffbRM__lYhwJj9xCEFW6jxkSPjI/pub?output=csv';
+  const proxyUrl = 'https://api.allorigins.win/get?url=';
+    async function fetchSheetData() {
+    try {
+      const response = await  fetch(`${proxyUrl}${sheetUrl}`)
+    .then(response => response.json())
+    .then(data => {
+      const decodedCsv = atob(data.contents.split(',')[1]); // Decodes the Base64 string
+      // Process the CSV data
+      const rows = decodedCsv.split('\n').map(row => row.split(','));
+      displayData(rows); // Function to display data in the table
+    })
+    .catch(error => console.error('Error fetching data:', error));
+    } catch (error) {
+      console.error('Error fetching Google Sheet data:', error);
+      document.body.innerHTML = '<p style="color: red;">Failed to fetch data. Please check the link or CORS settings.</p>';
+    }
+    }
+//}
+
+function displayData(rows) {
   const tableBody = document.querySelector('#ipo-table tbody');
-
-  if (!ipoData.active_IPOs || ipoData.active_IPOs.length === 0) {
-      tableBody.innerHTML = '<tr><td colspan="8">No active IPOs available.</td></tr>';
-      return;
-  }
-
-  const rows = ipoData.active_IPOs.map(ipo => {
-      return `
-      <tr>
-        <td>${ipo.name}</td>
-        <td>${ipo.issue_price}</td>
-        <td>${ipo.gmp}</td>
-        <td>${ipo.subscription_status.total}</td>
-        <td>${ipo.subscription_status.qib}</td>
-        <td>${ipo.subscription_status.nii}</td>
-        <td>${ipo.subscription_status.retail}</td>
-        <td>${ipo.subscription_date}</td>
-      </tr>
-    `;
-  }).join('');
-
-  tableBody.innerHTML = rows;
+  tableBody.innerHTML = '';
+  rows.forEach(row => {
+    const tr = document.createElement('tr');
+    row.forEach(cell => {
+      const td = document.createElement('td');
+      td.textContent = cell;
+      tr.appendChild(td);
+    });
+    tableBody.appendChild(tr);
+  });
 }
 
 async function loadBlogs() {
@@ -119,7 +128,7 @@ async function loadBlogs() {
       <div class="blog">
         <h3>${blog.title}</h3>
         <p>${blog.summary}</p>
-        <button class="more-btn" onclick="showMoreContent(${index})">More</button>
+        <button class="more-btn" onclick="showMoreContent(${index})">Read more</button>
         <div class="full-content" id="blog-${index}" style="display: none;">
           <p>${blog.fullContent}</p>
         </div>
@@ -217,7 +226,8 @@ const newsPerPage = 6;
 
 function displayMarketNews(news) {
   const newsContainer = document.getElementById('news-container');
-  const currentNews = news.slice(currentIndex, currentIndex + newsPerPage);
+  const filteredNews = news.filter(item => item.image && item.image.trim() !== '');
+  const currentNews = filteredNews.slice(currentIndex, currentIndex + newsPerPage);
 
   currentNews.forEach(item => {
       const newsItem = document.createElement('div');
