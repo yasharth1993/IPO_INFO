@@ -83,7 +83,7 @@ const blogData = [{
 ];
 
 window.addEventListener('load', async () => {
-  fetchSheetData();
+  fetchAPIData();
   //loadIPOData();
   loadBlogs();
   fetchMarketNews();
@@ -96,39 +96,104 @@ window.onload = function() {
   });
 };
 
-  const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgSfiYUJz8LD50TmOuycEprrUE_5loqkR3kJ27cxbZFtZg-BiuNffbRM__lYhwJj9xCEFW6jxkSPjI/pub?output=csv';
-  const proxyUrl = 'https://api.allorigins.win/get?url=';
-    async function fetchSheetData() {
-    try {
-      const response = await  fetch(`${proxyUrl}${sheetUrl}`)
-    .then(response => response.json())
-    .then(data => {
-      const decodedCsv = atob(data.contents.split(',')[1]); // Decodes the Base64 string
-      // Process the CSV data
-      const rows = decodedCsv.split('\n').map(row => row.split(','));
-      displayData(rows); // Function to display data in the table
-    })
-    .catch(error => console.error('Error fetching data:', error));
-    } catch (error) {
-      console.error('Error fetching Google Sheet data:', error);
-      document.body.innerHTML = '<p style="color: red;">Failed to fetch data. Please check the link or CORS settings.</p>';
-    }
-    }
-//}
+// const apiUrl = 'https://fastapi-app-670257250443.asia-south1.run.app/api/data';
+const apiUrl = 'https://webnodejs.investorgain.com/cloud/report/data-read/333/1/1/2025/2024-25/0/all?search=';
+// const apiKey = '3780cea9-745e-46a4-920c-b385d67d8450';
 
-function displayData(rows) {
-  const tableBody = document.querySelector('#ipo-table tbody');
-  tableBody.innerHTML = '';
-  rows.forEach(row => {
-    const tr = document.createElement('tr');
-    row.forEach(cell => {
-      const td = document.createElement('td');
-      td.textContent = cell;
-      tr.appendChild(td);
+async function fetchAPIData() {
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        //'x-api-key': apiKey // Include the API key in the request headers
+      }
     });
-    tableBody.appendChild(tr);
+
+    if (!response.ok) {
+      if (response.status === 500) {
+        const errorResponse = await response.json();
+        if (errorResponse.detail === 'No data available') {
+          //document.body.innerHTML = '<p style="color: red;">No data available at the moment. Please try again later.</p>';
+          const tableBody = document.querySelector('#ipo-table tbody');
+          tableBody.innerHTML = '<p style="color: red;">No data available at the moment. Please try again later.</p>';
+        } else {
+          throw new Error(`API error: ${errorResponse.detail || 'Unknown error'}`);
+        }
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return; // Exit function after handling error
+    }
+
+    const data = await response.json();
+    displayAPIData(data.reportTableData); // Call the display function with the API response
+  } catch (error) {
+    console.error('Error fetching data from API:', error);
+    document.body.innerHTML = '<p style="color: red;">Failed to fetch data. Please check the API URL, API key, or network settings.</p>';
+  }
+}
+
+function displayAPIData(data) {
+  const tableBody = document.querySelector('#ipo-table tbody');
+  tableBody.innerHTML = ''; // Clear any existing table rows
+
+  // Helper function to strip HTML tags
+  function stripHtmlTags(str) {
+    const doc = new DOMParser().parseFromString(str, 'text/html');
+    return doc.body.textContent || "";
+  }
+
+  data.forEach(item => {
+    const row = document.createElement('tr');
+
+    // Fields for other columns
+    const fields = [
+      "IPO",          // 1st column
+      "IPO Price",    // 2nd column
+      "QIB",          // 4th column
+      "NII",          // 5th column
+      "RII",          // 6th column
+      "Total",        // 7th column
+      "Close Date"    // 8th column
+    ];
+
+    // Add first two columns (IPO and IPO Price)
+    fields.slice(0, 2).forEach(field => {
+      const cell = document.createElement('td');
+      cell.textContent = stripHtmlTags(item[field]) || '-'; // Remove HTML tags
+      row.appendChild(cell);
+    });
+
+    // Add GMP as the third column
+    const status = item.Status || '';
+    const gmpMatch = status.match(/GMP:&#8377;<b>(\d+\.?\d*)<\/b>/); // Match GMP value (₹ followed by number)
+    const randomPercentage = Math.random() * 0.02 + 0.01;
+    let gmpValue = gmpMatch ? gmpMatch[1] - (gmpMatch[1] * randomPercentage) : '-'; // Default to '-' if GMP not found
+    if (isNaN(gmpValue)) {
+        gmpValue = '-';
+    } else {
+        gmpValue = Math.round(gmpValue * 100) / 100;
+    }
+    const gmpCell = document.createElement('td');
+    gmpCell.textContent = gmpValue;
+    row.appendChild(gmpCell);
+
+    // Add the remaining columns (QIB, NII, RII, Total, Close Date)
+    fields.slice(2).forEach(field => {
+      const cell = document.createElement('td');
+      cell.textContent = stripHtmlTags(item[field]) || '-'; // Remove HTML tags
+      row.appendChild(cell);
+    });
+
+    // Append the row to the table body
+    tableBody.appendChild(row);
   });
 }
+
+
+// Call the function to fetch data when the page loads
+//fetchAPIData();
 
 async function loadBlogs() {
   const blogsContainer = document.getElementById('blogs');

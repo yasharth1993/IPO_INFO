@@ -12,7 +12,7 @@ body {
 }
 
 header {
-    background-color: #4caf505e;
+    background : linear-gradient(to right, #2b2b81, pink);
     color: #2f4f4fcf;
     padding: 10px;
     display: flex;
@@ -25,10 +25,11 @@ header {
 }
 
 header .logo {
-    width: 70px;
-    height: 70px;
-    object-fit: contain;
-    position: absolute;
+    width: 370px;
+    height: 100px;
+    object-fit: cover;
+    margin-top: 15px;
+    /* position: absolute; */
     left: 15px; /* Push logo to the leftmost side */
 }
 
@@ -86,7 +87,7 @@ header h1 {
 
 /* Navigation Bar Styles */
 .navbar {
-    background-color: #4caf50b3;
+    background-color: black;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -124,7 +125,7 @@ header h1 {
 
 .nav-menu a {
     text-decoration: none;
-    color: #2f4f4fcf;
+    color: white;
     padding: 10px 15px;
     transition: background-color 0.3s;
     font-weight: bold;
@@ -304,7 +305,7 @@ header h1 {
     max-width: 1000px;
     margin: 20px auto;
     padding: 20px;
-    background: #fff2cd94;
+    background: whitesmoke;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -348,7 +349,7 @@ tr:hover td {
 }
 
 button.more-btn {
-    background-color: #4CAF50;
+    background-color: darkslategray;
     color: white;
     padding: 5px 10px;
     border: none;
@@ -357,7 +358,7 @@ button.more-btn {
 }
 
 button.more-btn:hover {
-    background-color: #45a049;
+    background-color: dimgray;
 }
 
 /* Media Queries for Mobile Devices */
@@ -419,8 +420,8 @@ button.more-btn:hover {
     }
 
     header .logo {
-        width: 50px;
-        height: 50px;
+        width: 340px;
+        height: 60px;
     }
 
     header h1 {
@@ -605,6 +606,8 @@ footer {
     justify-content: space-around;
     flex-wrap: wrap;
     margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .about-us, .social-links, .contact-info {
@@ -665,6 +668,8 @@ footer {
     .footer-container {
         flex-direction: column;
         text-align: center;
+        margin-left: 10px;
+        margin-right: 10px;
     }
 
     .about-us, .social-links, .contact-info {
