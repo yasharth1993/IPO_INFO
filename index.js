@@ -144,6 +144,10 @@ function displayAPIData(data) {
     return doc.body.textContent || "";
   }
 
+  function formatDateString(dateStr) {
+    return dateStr.replace(/\d+(st|nd|rd|th)/, (match) => match.replace(/\D/g, ''));
+  }
+
   data.forEach(item => {
     const row = document.createElement('tr');
 
@@ -185,6 +189,25 @@ function displayAPIData(data) {
       cell.textContent = stripHtmlTags(item[field]) || '-'; // Remove HTML tags
       row.appendChild(cell);
     });
+
+    // Check Close Date and apply color
+    const formattedCloseDate = formatDateString(item["Close Date"]);
+    const closeDate = new Date(formattedCloseDate);
+    const currentDate = new Date();
+
+    if (closeDate < currentDate) {
+      console.log(closeDate);
+      console.log(currentDate);
+      row.style.backgroundColor = '#FFCCCC'; // Past (redish)
+    } else if (closeDate.toDateString() === currentDate.toDateString()) {
+      console.log(closeDate);
+      console.log(currentDate);
+      row.style.backgroundColor = '#FFFF99'; // Today (yellowish)
+    } else {
+      console.log(closeDate);
+      console.log(currentDate);
+      row.style.backgroundColor = '#CCFFCC'; // Future (greenish)
+    }
 
     // Append the row to the table body
     tableBody.appendChild(row);
